@@ -1,7 +1,7 @@
 # Pedoman Wawancara — Sistem POS & Manajemen Coffee Shop ("educoffee")
 
 ## A. Konteks
-* **Klien / Lokasi:** Pemilik dan Pengelola KopiKita Coffee Shop, Sampit.
+* **Klien / Lokasi:** Pemilik dan Pengelola educoffee Shop, Sampit.
 * **Masalah Utama (maks. 3):**
   1. Pencatatan transaksi penjualan masih mengandalkan nota kertas manual sehingga proses penghitungan omset harian lambat dan rawan selisih.
   2. Stok bahan baku utama (biji kopi, susu, sirup, cup) sering terlambat terpantau yang mengakibatkan kehabisan stok mendadak saat jam sibuk (*peak hours*).

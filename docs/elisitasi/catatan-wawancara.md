@@ -1,6 +1,6 @@
 # Catatan Wawancara — Sistem POS & Manajemen Coffee Shop ("educoffee")
 
-* **Tanggal / Lokasi:** [Tanggal Wawancara] / Kedai KopiKita, Sampit
+* **Tanggal / Lokasi:** [11-11-2026] / Kedai educoffee, Sampit
 * **Narasumber:** Pengelola / Pemilik Usaha (Peran: Pemilik & Kasir)
 * **Pewawancara / Pencatat:** Tim Pengembang R.P.L. (Mahasiswa D3 TI)
 
