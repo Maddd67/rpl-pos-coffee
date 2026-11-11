@@ -1,0 +1,9 @@
+flowchart TD
+    A((Mulai)) --> B[Pemilik membuka menu katalog produk]
+    B --> C[Pemilik menambah atau mengubah data menu]
+    C --> D{Apakah data lengkap?}
+    D -- Tidak --> E[Sistem menampilkan pesan kesalahan input]
+    E --> C
+    D -- Ya --> F[Sistem memperbarui basis data menu]
+    F --> G[Sistem menampilkan daftar menu terbaru]
+    G --> H((Selesai))

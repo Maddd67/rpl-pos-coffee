@@ -1,0 +1,10 @@
+flowchart TD
+    A((Mulai)) --> B[Kasir memilih produk menu]
+    B --> C[Kasir memasukkan jumlah pesanan]
+    C --> D{Stok bahan cukup?}
+    D -- Tidak --> E[Sistem menampilkan pesan stok tidak cukup]
+    E --> C
+    D -- Ya --> F[Sistem menyimpan data transaksi]
+    F --> G[Sistem mengurangi stok bahan baku]
+    G --> H[Sistem menampilkan rincian pembayaran]
+    H --> I((Selesai))
