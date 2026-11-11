@@ -1,0 +1,26 @@
+flowchart LR
+    Kasir[["Aktor: Kasir"]]
+    Pemilik[["Aktor: Pemilik"]]
+
+    subgraph S["Sistem POS KopiKita"]
+        UC1(["Login"])
+        UC2(["Catat penjualan"])
+        UC3(["Cek stok bahan"])
+        UC4(["Kelola katalog menu"])
+        UC5(["Kelola hak akses"])
+        UC6(["Lihat laporan harian"])
+        UC7(["Cetak struk"])
+    end
+
+    Kasir --- UC1
+    Kasir --- UC2
+    Kasir --- UC3
+    Kasir --- UC7
+
+    Pemilik --- UC1
+    Pemilik --- UC4
+    Pemilik --- UC5
+    Pemilik --- UC6
+
+    UC2 -.->|include| UC3
+    UC2 -.->|extend| UC7

@@ -1,0 +1,9 @@
+flowchart TD
+    A((Mulai)) --> B[Pemilik memilih menu laporan harian]
+    B --> C[Sistem memuat data transaksi hari ini]
+    C --> D{Apakah ada transaksi?}
+    D -- Tidak --> E[Sistem menampilkan pesan data kosong]
+    E --> F((Selesai))
+    D -- Ya --> G[Sistem menghitung total akumulasi omset]
+    G --> H[Sistem menampilkan ringkasan laporan di layar]
+    H --> F
