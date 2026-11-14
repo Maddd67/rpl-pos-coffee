@@ -1,0 +1,11 @@
+flowchart LR
+  L(["Login"]) --> B(["Beranda"])
+  B --> J(["Catat Penjualan"])
+  B --> D(["Daftar Katalog Menu"])
+  B --> M(["Stok Bahan Baku"])
+  B --> R(["Laporan Omset (Pemilik)"])
+  D --> F(["Form Tambah/Ubah Menu (Pemilik)"])
+  F --> D
+  J --> N(["Cetak Struk Pembayaran"])
+  N --> J
+  B -.-> K(["Keluar / Logout"])
