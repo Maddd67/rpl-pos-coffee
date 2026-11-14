@@ -1,0 +1,30 @@
+erDiagram
+  PENGGUNA ||--o{ PENJUALAN : mencatat
+  PENJUALAN ||--|{ DETAIL_PENJUALAN : memuat
+  BARANG ||--o{ DETAIL_PENJUALAN : terjual_dalam
+
+  PENGGUNA {
+    int id PK
+    text username UK
+    text password_hash
+    text peran
+  }
+  BARANG {
+    int id PK
+    text nama UK
+    int harga_jual
+    int stok
+    int stok_minimum
+  }
+  PENJUALAN {
+    int id PK
+    text tanggal
+    int pengguna_id FK
+  }
+  DETAIL_PENJUALAN {
+    int id PK
+    int penjualan_id FK
+    int barang_id FK
+    int jumlah
+    int harga_satuan
+  }
