@@ -6,6 +6,7 @@
   <p class="galat" role="alert">{{ g_ }}</p>
 {% endfor %}
 <form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <label>Barang
     <select name="barang_id" required>
       <option value="">-- pilih --</option>

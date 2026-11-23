@@ -9,30 +9,37 @@ import models
 
 models.DB_PATH = Path(tempfile.mkdtemp()) / "uji_educoffee.db"
 import app as aplikasi
+import percobaan
 import services
 
 c = aplikasi.app.test_client()
 
 
+def _siapkan_token(client, token="token-uji-educoffee"):
+    with client.session_transaction() as s:
+        s.setdefault("csrf_token", token)
+        return s["csrf_token"]
+
+
+def kirim(url, ikuti=True, **data):
+    data.setdefault("csrf_token", _siapkan_token(c))
+    return c.post(url, data=data, follow_redirects=ikuti)
+
+
 def login_sebagai(username, password):
-    return c.post(
-        "/login",
-        data={"username": username, "password": password},
-        follow_redirects=True,
-    )
+    return kirim("/login", username=username, password=password)
 
 
 def logout():
-    return c.post("/logout", follow_redirects=True)
-
-
-def kirim(url, **data):
-    return c.post(url, data=data, follow_redirects=True)
+    return kirim("/logout")
 
 
 def ada(teks, hasil):
     assert teks in hasil.text, f"Tidak ditemukan: {teks!r}"
 
+
+# --- Uji CSRF (POST tanpa token -> 400) ---
+assert c.post("/login", data={"username": "owner_edu", "password": "SandiOwner123"}).status_code == 400
 
 # --- Tamu diarahkan ke login ---
 resp_tamu = c.get("/barang", follow_redirects=False)
@@ -48,32 +55,39 @@ assert baris_owner is not None
 assert baris_owner["password_hash"] != "SandiOwner123"
 assert baris_owner["password_hash"].startswith(("scrypt:", "pbkdf2:"))
 
-# --- Pesan login sama untuk sandi salah & pengguna tidak ada ---
-gagal_sandi = c.post(
-    "/login",
-    data={"username": "owner_edu", "password": "SalahPassword"},
-    follow_redirects=True,
-)
-gagal_user = c.post(
-    "/login",
-    data={"username": "tidak_ada_user", "password": "SalahPassword"},
-    follow_redirects=True,
-)
-assert "Nama pengguna atau kata sandi salah." in gagal_sandi.text
-assert "Nama pengguna atau kata sandi salah." in gagal_user.text
+# --- Uji batas percobaan login (401 lalu 429) ---
+percobaan._gagal.clear()
+for _ in range(percobaan.BATAS):
+    gagal = kirim("/login", ikuti=False, username="owner_edu", password="SalahPassword")
+    assert gagal.status_code == 401
+    assert "Nama pengguna atau kata sandi salah." in gagal.text
 
-# --- Pencegahan open redirect ---
-resp_next = c.post(
+terkunci_resp = kirim("/login", ikuti=False, username="owner_edu", password="SandiOwner123")
+assert terkunci_resp.status_code == 429
+assert "Terlalu banyak percobaan gagal." in terkunci_resp.text
+percobaan._gagal.clear()
+
+# --- Uji open redirect ---
+resp_next = kirim(
     "/login?next=https://jahat.example",
-    data={"username": "owner_edu", "password": "SandiOwner123"},
-    follow_redirects=False,
+    ikuti=False,
+    username="owner_edu",
+    password="SandiOwner123",
 )
 assert resp_next.status_code == 302
 assert not resp_next.headers["Location"].startswith("https://jahat.example")
 
-# --- Login sebagai pemilik & uji CRUD + pencarian + relasi ---
+# --- Login pemilik & uji CRUD + pencarian + relasi + header ---
 res_login = login_sebagai("owner_edu", "SandiOwner123")
 ada("Belum ada barang", res_login)
+
+hdr = c.get("/barang").headers
+assert hdr["X-Content-Type-Options"] == "nosniff"
+assert hdr["X-Frame-Options"] == "DENY"
+assert hdr["Referrer-Policy"] == "same-origin"
+
+# Uji POST hapus tanpa token CSRF -> 400
+assert c.post("/barang/1/hapus", data={}).status_code == 400
 
 for n, h, s, m in [
     ("Kopi Arabika", 25000, 10, 5),
@@ -154,7 +168,7 @@ ada("Kopi Arabika", res_kasir)
 
 assert c.get("/barang/tambah").status_code == 403
 assert c.get("/masuk").status_code == 403
-assert c.post("/barang/1/hapus").status_code == 403
+assert kirim("/barang/1/hapus", ikuti=False).status_code == 403
 assert models.ambil_barang(1) is not None
 
 logout()
