@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block judul %}Masuk — Edu Coffee{% endblock %}
+{% block isi %}
+<h1>Masuk — Edu Coffee</h1>
+{% for g_ in galat %}
+  <p class="galat" role="alert">{{ g_ }}</p>
+{% endfor %}
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% if next_url %}
+    <input type="hidden" name="next" value="{{ next_url }}">
+  {% endif %}
+  <label>Nama pengguna
+    <input type="text" name="username" value="{{ username }}" required maxlength="30" autocomplete="username" autofocus>
+  </label>
+  <label>Kata sandi
+    <input type="password" name="password" required autocomplete="current-password">
+  </label>
+  <button type="submit">Masuk</button>
+</form>
+{% endblock %}

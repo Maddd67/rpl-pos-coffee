@@ -46,6 +46,7 @@
         <a href="{{ url_for('ubah_barang', barang_id=b['id']) }}">Ubah</a>
         <form class="baris" method="post" action="{{ url_for('hapus_barang', barang_id=b['id']) }}"
               onsubmit="return confirm('Hapus barang ini?')">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit">Hapus</button>
         </form>
       </td>

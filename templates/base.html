@@ -3,26 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block judul %}Edu Coffee POS{% endblock %}</title>
-  <style>
-    body { font-family: sans-serif; margin: 20px; line-height: 1.5; }
-    nav { background: #3e2723; padding: 12px; margin-bottom: 20px; }
-    nav a { color: #fff; text-decoration: none; font-weight: bold; margin-right: 15px; }
-    .pesan { background: #d4edda; color: #155724; padding: 10px; border: 1px solid #c3e6cb; }
-    .galat { background: #f8d7da; color: #721c24; padding: 10px; border: 1px solid #f5c6cb; }
-    table { border-collapse: collapse; width: 100%; margin-top: 15px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background: #f4f4f4; }
-  </style>
+  <title>{% block judul %}Edu Coffee{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <nav>
-    <a href="{{ url_for('daftar_barang') }}">Katalog &amp; Stok</a>
-    <a href="{{ url_for('daftar_masuk') }}">Barang Masuk</a>
+    <strong>Edu Coffee</strong>
+    {% if g.pengguna %}
+      <a href="{{ url_for('daftar_barang') }}">Katalog &amp; Stok</a>
+      {% if g.pengguna['peran'] == 'pemilik' %}
+        <a href="{{ url_for('daftar_masuk') }}">Barang masuk</a>
+      {% endif %}
+      <span class="kanan">
+        {{ g.pengguna['username'] }} ({{ g.pengguna['peran'] }})
+        <form class="baris" method="post" action="{{ url_for('logout') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit">Keluar</button>
+        </form>
+      </span>
+    {% endif %}
   </nav>
-  {% for pesan in get_flashed_messages() %}
-    <p class="pesan">{{ pesan }}</p>
-  {% endfor %}
-  {% block isi %}{% endblock %}
+  <main>
+    {% for pesan in get_flashed_messages() %}
+      <p class="pesan" role="status">{{ pesan }}</p>
+    {% endfor %}
+    {% block isi %}{% endblock %}
+  </main>
 </body>
 </html>
