@@ -20,6 +20,7 @@ from flask import (
 import models
 import percobaan
 import services
+from versi import VERSI
 
 app = Flask(__name__)
 logging.basicConfig(
@@ -38,7 +39,8 @@ if not app.secret_key:
 app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
-    SESSION_COOKIE_SECURE=PRODUKSI,
+    # Hanya lewat HTTPS pada produksi; atur COOKIE_SECURE=0 bila memakai HTTP di jaringan toko tertutup.
+    SESSION_COOKIE_SECURE=os.environ.get("COOKIE_SECURE", "1" if PRODUKSI else "0") == "1",
 )
 models.init_db()
 
@@ -51,6 +53,7 @@ def csrf_token():
 
 
 app.jinja_env.globals["csrf_token"] = csrf_token
+app.jinja_env.globals["versi"] = VERSI
 
 
 @app.before_request
@@ -131,8 +134,8 @@ def akses_ditolak(_galat):
 def login():
     galat, status = [], 200
     username_input = request.form.get("username", "")
+    bersih_user = username_input.strip()
     if request.method == "POST":
-        bersih_user = username_input.strip()
         kunci = f"{request.remote_addr}|{bersih_user.lower()}"
         if percobaan.terkunci(kunci):
             app.logger.warning("login terkunci user=%r ip=%s", bersih_user, request.remote_addr)
@@ -152,7 +155,12 @@ def login():
             galat.append("Nama pengguna atau kata sandi salah.")
             status = 401
     next_val = _tujuan_aman(request.args.get("next")) or ""
-    return render_template("login.html", galat=galat, username=bersih_user if request.method == "POST" else "", next_url=next_val), status
+    return render_template(
+        "login.html",
+        galat=galat,
+        username=bersih_user if request.method == "POST" else "",
+        next_url=next_val,
+    ), status
 
 
 @app.route("/logout", methods=["POST"])

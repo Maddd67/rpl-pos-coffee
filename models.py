@@ -1,8 +1,9 @@
+import os
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
 
-DB_PATH = Path(__file__).with_name("educoffee.db")
+DB_PATH = Path(os.environ.get("TOKO_DB") or Path(__file__).resolve().parent / "educoffee.db")
 SCHEMA = Path(__file__).parent / "docs" / "desain" / "schema.sql"
 
 
