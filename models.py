@@ -26,9 +26,20 @@ def init_db():
             db.executescript(SCHEMA.read_text(encoding="utf-8"))
 
 
-def semua_barang():
+def _escape_like(teks):
+    """Netralkan % dan _ agar dicari sebagai huruf biasa."""
+    return teks.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def cari_barang(kata="", hanya_menipis=False):
+    """Ambil daftar barang; opsional disaring kata kunci nama dan status stok menipis."""
+    sql = "SELECT * FROM barang WHERE nama LIKE ? ESCAPE '\\'"
+    param = ["%" + _escape_like(kata) + "%"]
+    if hanya_menipis:
+        sql += " AND stok < stok_minimum"
+    sql += " ORDER BY nama"
     with koneksi() as db:
-        return db.execute("SELECT * FROM barang ORDER BY nama").fetchall()
+        return db.execute(sql, param).fetchall()
 
 
 def ambil_barang(barang_id):
@@ -55,3 +66,26 @@ def ubah_barang(barang_id, nama, harga_jual, stok_minimum):
 def hapus_barang(barang_id):
     with koneksi() as db:
         db.execute("DELETE FROM barang WHERE id = ?", (barang_id,))
+
+
+def tambah_barang_masuk(barang_id, jumlah, tanggal):
+    """Catat barang masuk dan tambah stok dalam satu transaksi atomik."""
+    with koneksi() as db:
+        db.execute(
+            "INSERT INTO barang_masuk (barang_id, jumlah, tanggal) VALUES (?, ?, ?)",
+            (barang_id, jumlah, tanggal),
+        )
+        db.execute(
+            "UPDATE barang SET stok = stok + ? WHERE id = ?",
+            (jumlah, barang_id),
+        )
+
+
+def semua_barang_masuk():
+    with koneksi() as db:
+        return db.execute(
+            "SELECT m.id, m.tanggal, b.nama AS nama_barang, m.jumlah "
+            "FROM barang_masuk m "
+            "JOIN barang b ON b.id = m.barang_id "
+            "ORDER BY m.tanggal DESC, m.id DESC"
+        ).fetchall()

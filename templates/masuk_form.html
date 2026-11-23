@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block judul %}Catat Barang Masuk — Edu Coffee{% endblock %}
+{% block isi %}
+<h1>Catat Barang Masuk — Edu Coffee</h1>
+{% for g in galat %}<p class="galat">{{ g }}</p>{% endfor %}
+<form method="post">
+  <p>
+    <label>Barang:
+      <select name="barang_id">
+        <option value="">-- pilih --</option>
+        {% for b in barang %}
+        <option value="{{ b['id'] }}" {% if isian.get('barang_id') == b['id']|string %}selected{% endif %}>
+          {{ b['nama'] }}
+        </option>
+        {% endfor %}
+      </select>
+    </label>
+  </p>
+  <p>
+    <label>Jumlah:
+      <input name="jumlah" value="{{ isian.get('jumlah', '') }}">
+    </label>
+  </p>
+  <p>
+    <label>Tanggal:
+      <input name="tanggal" value="{{ isian.get('tanggal', '') }}">
+    </label>
+  </p>
+  <button type="submit">Simpan</button>
+  <a href="{{ url_for('daftar_masuk') }}">Batal</a>
+</form>
+{% endblock %}

@@ -3,6 +3,17 @@
 {% block isi %}
 <h1>Katalog Menu &amp; Stok — Edu Coffee</h1>
 <p><a href="{{ url_for('tambah_barang') }}">+ Tambah Menu / Bahan</a></p>
+
+<form method="get">
+  <input name="q" value="{{ kata }}" placeholder="Cari nama barang">
+  <label>
+    <input type="checkbox" name="status" value="menipis" {% if menipis %}checked{% endif %}>
+    Stok menipis saja
+  </label>
+  <button type="submit">Cari</button>
+  <a href="{{ url_for('daftar_barang') }}">Atur ulang</a>
+</form>
+
 <table>
   <tr>
     <th>Nama</th>
@@ -14,7 +25,7 @@
   {% for b in barang %}
   <tr>
     <td>{{ b['nama'] }}</td>
-    <td>Rp {{ "{:,}".format(b['harga_jual']).replace(',', '.') }}</td>
+    <td>Rp {{ b['harga_jual'] }}</td>
     <td>{{ b['stok'] }}</td>
     <td>
       {% if b['stok'] < b['stok_minimum'] %}
@@ -32,7 +43,15 @@
     </td>
   </tr>
   {% else %}
-  <tr><td colspan="5">Belum ada data menu atau bahan baku.</td></tr>
+  <tr>
+    <td colspan="5">
+      {% if kata or menipis %}
+        Tidak ada barang yang cocok.
+      {% else %}
+        Belum ada barang.
+      {% endif %}
+    </td>
+  </tr>
   {% endfor %}
 </table>
 {% endblock %}
