@@ -31,7 +31,7 @@ Aplikasi web lokal berbasis Flask dan SQLite untuk "educoffee Shop" guna mengoto
 * **Bahan Baku:** ID Bahan, Nama Bahan, Jumlah Stok, Satuan (gram/ml/pcs).
 
 ## 5. Di luar lingkup
-* Pembacaan *barcode* fisik, aplikasi seluler terpisah, dan integrasi kurir pengantaran online[cite: 14].
+* Pembacaan *barcode* fisik, aplikasi seluler terpisah, dan integrasi kurir pengantaran online.
 
 ## 6. Pertanyaan terbuka
 * Apakah diperlukan diskon khusus atau sistem *happy hour* otomatis untuk jam-jam tertentu di kedai?

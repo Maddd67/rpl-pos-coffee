@@ -9,5 +9,5 @@ flowchart LR
     S --> M["Model / Akses Data (models.py)"]
     R --> V["View: templates/*.html"]
   end
-  M -->|SQL Queries| DB[(SQLite: kopikita.db)]
+  M -->|SQL Queries| DB[(SQLite: educoffee.db)]
   V -->|HTML Response| U
