@@ -6,13 +6,17 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import models
 
 PERAN = ("pemilik", "kasir")
+BATAS_ANGKA = 1_000_000_000
 _HASH_PALSU = generate_password_hash("bukan-kata-sandi-sungguhan-educoffee")
 
 
 def _bilangan(teks):
-    """Ubah teks menjadi bilangan bulat >= 0, atau None bila tidak valid."""
+    """Kembalikan bilangan bulat 0..BATAS_ANGKA dari digit ASCII, atau None bila tidak valid."""
     teks = (teks or "").strip()
-    return int(teks) if teks.isdigit() else None
+    if not (teks.isascii() and teks.isdigit()) or len(teks) > 10:
+        return None
+    angka = int(teks)
+    return angka if angka <= BATAS_ANGKA else None
 
 
 def validasi_barang(form, dengan_stok=True):
@@ -53,6 +57,8 @@ def validasi_barang_masuk(form):
     if not jumlah:
         galat.append("Jumlah harus berupa angka lebih dari 0.")
     try:
+        if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", tanggal):
+            raise ValueError("format tanggal tidak sesuai")
         date.fromisoformat(tanggal)
     except ValueError:
         galat.append("Tanggal harus berformat TTTT-BB-HH.")
