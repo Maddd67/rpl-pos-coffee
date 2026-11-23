@@ -32,7 +32,7 @@ def _escape_like(teks):
 
 
 def cari_barang(kata="", hanya_menipis=False):
-    """Ambil daftar barang; opsional disaring kata kunci nama dan status stok menipis."""
+    """Ambil daftar barang; opsional disaring nama dan status stok menipis."""
     sql = "SELECT * FROM barang WHERE nama LIKE ? ESCAPE '\\'"
     param = ["%" + _escape_like(kata) + "%"]
     if hanya_menipis:
@@ -89,3 +89,27 @@ def semua_barang_masuk():
             "JOIN barang b ON b.id = m.barang_id "
             "ORDER BY m.tanggal DESC, m.id DESC"
         ).fetchall()
+
+
+def tambah_pengguna(username, password_hash, peran):
+    with koneksi() as db:
+        db.execute(
+            "INSERT INTO pengguna (username, password_hash, peran) VALUES (?, ?, ?)",
+            (username, password_hash, peran),
+        )
+
+
+def cari_pengguna(username):
+    with koneksi() as db:
+        return db.execute(
+            "SELECT * FROM pengguna WHERE username = ?",
+            (username,),
+        ).fetchone()
+
+
+def ambil_pengguna(pengguna_id):
+    with koneksi() as db:
+        return db.execute(
+            "SELECT * FROM pengguna WHERE id = ?",
+            (pengguna_id,),
+        ).fetchone()
