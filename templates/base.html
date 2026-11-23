@@ -17,7 +17,8 @@
 </head>
 <body>
   <nav>
-    <a href="{{ url_for('daftar_barang') }}">Edu Coffee — Katalog &amp; Stok</a>
+    <a href="{{ url_for('daftar_barang') }}">Katalog &amp; Stok</a>
+    <a href="{{ url_for('daftar_masuk') }}">Barang Masuk</a>
   </nav>
   {% for pesan in get_flashed_messages() %}
     <p class="pesan">{{ pesan }}</p>
