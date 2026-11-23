@@ -28,3 +28,10 @@ CREATE TABLE detail_penjualan (
   jumlah       INTEGER NOT NULL CHECK (jumlah > 0),
   harga_satuan INTEGER NOT NULL CHECK (harga_satuan >= 0)
 );
+
+CREATE TABLE IF NOT EXISTS barang_masuk (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    barang_id  INTEGER NOT NULL REFERENCES barang(id),
+    jumlah     INTEGER NOT NULL CHECK (jumlah > 0),
+    tanggal    TEXT NOT NULL
+);

@@ -114,3 +114,14 @@ def ambil_pengguna(pengguna_id):
             "SELECT * FROM pengguna WHERE id = ?",
             (pengguna_id,),
         ).fetchone()
+        
+def tambah_barang_masuk(barang_id, jumlah, tanggal):
+    with koneksi() as db:
+        db.execute(
+            "INSERT INTO barang_masuk (barang_id, jumlah, tanggal) VALUES (?, ?, ?)",
+            (barang_id, jumlah, tanggal),
+        )
+        db.execute(
+            "UPDATE barang SET stok = stok + ? WHERE id = ?",
+            (jumlah, barang_id),
+        )
