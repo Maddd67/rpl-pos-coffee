@@ -2,21 +2,23 @@
 {% block judul %}Barang Masuk — Edu Coffee{% endblock %}
 {% block isi %}
 <h1>Barang Masuk — Edu Coffee</h1>
-<p><a href="{{ url_for('tambah_masuk') }}">+ Catat barang masuk</a></p>
-<table>
-  <tr>
-    <th>Tanggal</th>
-    <th>Barang</th>
-    <th>Jumlah</th>
-  </tr>
-  {% for m in masuk %}
-  <tr>
-    <td>{{ m['tanggal'] }}</td>
-    <td>{{ m['nama_barang'] }}</td>
-    <td>{{ m['jumlah'] }}</td>
-  </tr>
-  {% else %}
-  <tr><td colspan="3">Belum ada barang masuk.</td></tr>
-  {% endfor %}
-</table>
+<p><a class="tombol" href="{{ url_for('tambah_masuk') }}">+ Catat barang masuk</a></p>
+<div class="tabel-wrap">
+  <table>
+    <tr>
+      <th>Tanggal</th>
+      <th>Barang</th>
+      <th>Jumlah</th>
+    </tr>
+    {% for m in masuk %}
+    <tr>
+      <td>{{ m['tanggal'] }}</td>
+      <td>{{ m['nama_barang'] }}</td>
+      <td>{{ m['jumlah'] }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="3">Belum ada barang masuk.</td></tr>
+    {% endfor %}
+  </table>
+</div>
 {% endblock %}

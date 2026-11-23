@@ -2,30 +2,26 @@
 {% block judul %}Catat Barang Masuk — Edu Coffee{% endblock %}
 {% block isi %}
 <h1>Catat Barang Masuk — Edu Coffee</h1>
-{% for g in galat %}<p class="galat">{{ g }}</p>{% endfor %}
+{% for g_ in galat %}
+  <p class="galat" role="alert">{{ g_ }}</p>
+{% endfor %}
 <form method="post">
-  <p>
-    <label>Barang:
-      <select name="barang_id">
-        <option value="">-- pilih --</option>
-        {% for b in barang %}
-        <option value="{{ b['id'] }}" {% if isian.get('barang_id') == b['id']|string %}selected{% endif %}>
-          {{ b['nama'] }}
-        </option>
-        {% endfor %}
-      </select>
-    </label>
-  </p>
-  <p>
-    <label>Jumlah:
-      <input name="jumlah" value="{{ isian.get('jumlah', '') }}">
-    </label>
-  </p>
-  <p>
-    <label>Tanggal:
-      <input name="tanggal" value="{{ isian.get('tanggal', '') }}">
-    </label>
-  </p>
+  <label>Barang
+    <select name="barang_id" required>
+      <option value="">-- pilih --</option>
+      {% for b in barang %}
+      <option value="{{ b['id'] }}" {% if isian.get('barang_id') == b['id']|string %}selected{% endif %}>
+        {{ b['nama'] }}
+      </option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Jumlah
+    <input type="number" name="jumlah" value="{{ isian.get('jumlah', '') }}" required min="1" step="1">
+  </label>
+  <label>Tanggal
+    <input type="date" name="tanggal" value="{{ isian.get('tanggal', '') }}" required>
+  </label>
   <button type="submit">Simpan</button>
   <a href="{{ url_for('daftar_masuk') }}">Batal</a>
 </form>

@@ -2,10 +2,14 @@
 {% block judul %}Katalog Menu &amp; Stok — Edu Coffee{% endblock %}
 {% block isi %}
 <h1>Katalog Menu &amp; Stok — Edu Coffee</h1>
-<p><a href="{{ url_for('tambah_barang') }}">+ Tambah Menu / Bahan</a></p>
+{% if g.pengguna and g.pengguna['peran'] == 'pemilik' %}
+  <p><a class="tombol" href="{{ url_for('tambah_barang') }}">+ Tambah barang</a></p>
+{% endif %}
 
-<form method="get">
-  <input name="q" value="{{ kata }}" placeholder="Cari nama barang">
+<form class="cari" method="get">
+  <label for="q">Cari nama
+    <input id="q" type="text" name="q" value="{{ kata }}" placeholder="Cari nama barang">
+  </label>
   <label>
     <input type="checkbox" name="status" value="menipis" {% if menipis %}checked{% endif %}>
     Stok menipis saja
@@ -14,44 +18,50 @@
   <a href="{{ url_for('daftar_barang') }}">Atur ulang</a>
 </form>
 
-<table>
-  <tr>
-    <th>Nama</th>
-    <th>Harga Jual</th>
-    <th>Stok</th>
-    <th>Status</th>
-    <th>Aksi</th>
-  </tr>
-  {% for b in barang %}
-  <tr>
-    <td>{{ b['nama'] }}</td>
-    <td>Rp {{ b['harga_jual'] }}</td>
-    <td>{{ b['stok'] }}</td>
-    <td>
-      {% if b['stok'] < b['stok_minimum'] %}
-        <strong style="color: red;">Stok menipis</strong>
-      {% else %}
-        Cukup
+<div class="tabel-wrap">
+  <table>
+    <tr>
+      <th>Nama</th>
+      <th>Harga jual</th>
+      <th>Stok</th>
+      <th>Status</th>
+      {% if g.pengguna and g.pengguna['peran'] == 'pemilik' %}
+        <th>Aksi</th>
       {% endif %}
-    </td>
-    <td>
-      <a href="{{ url_for('ubah_barang', barang_id=b['id']) }}">Ubah</a> |
-      <form method="post" action="{{ url_for('hapus_barang', barang_id=b['id']) }}" style="display:inline"
-            onsubmit="return confirm('Yakin ingin menghapus data ini dari Edu Coffee?')">
-        <button type="submit">Hapus</button>
-      </form>
-    </td>
-  </tr>
-  {% else %}
-  <tr>
-    <td colspan="5">
-      {% if kata or menipis %}
-        Tidak ada barang yang cocok.
-      {% else %}
-        Belum ada barang.
+    </tr>
+    {% for b in barang %}
+    <tr>
+      <td>{{ b['nama'] }}</td>
+      <td>Rp {{ b['harga_jual'] }}</td>
+      <td>{{ b['stok'] }}</td>
+      <td>
+        {% if b['stok'] < b['stok_minimum'] %}
+          <span class="menipis">Stok menipis</span>
+        {% else %}
+          Cukup
+        {% endif %}
+      </td>
+      {% if g.pengguna and g.pengguna['peran'] == 'pemilik' %}
+      <td>
+        <a href="{{ url_for('ubah_barang', barang_id=b['id']) }}">Ubah</a>
+        <form class="baris" method="post" action="{{ url_for('hapus_barang', barang_id=b['id']) }}"
+              onsubmit="return confirm('Hapus barang ini?')">
+          <button type="submit">Hapus</button>
+        </form>
+      </td>
       {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="{% if g.pengguna and g.pengguna['peran'] == 'pemilik' %}5{% else %}4{% endif %}">
+        {% if kata or menipis %}
+          Tidak ada barang yang cocok.
+        {% else %}
+          Belum ada barang.
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
 {% endblock %}

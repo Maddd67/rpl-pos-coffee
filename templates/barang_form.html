@@ -2,14 +2,24 @@
 {% block judul %}{{ judul }} — Edu Coffee{% endblock %}
 {% block isi %}
 <h1>{{ judul }}</h1>
-{% for g in galat %}<p class="galat">{{ g }}</p>{% endfor %}
+{% for g_ in galat %}
+  <p class="galat" role="alert">{{ g_ }}</p>
+{% endfor %}
 <form method="post">
-  <p><label>Nama Menu / Bahan:<br><input name="nama" value="{{ barang.get('nama', '') }}" required></label></p>
-  <p><label>Harga Jual (Rp):<br><input name="harga_jual" value="{{ barang.get('harga_jual', '') }}" required></label></p>
+  <label>Nama
+    <input type="text" name="nama" value="{{ barang.get('nama', '') }}" required maxlength="100">
+  </label>
+  <label>Harga jual (Rp)
+    <input type="number" name="harga_jual" value="{{ barang.get('harga_jual', '') }}" required min="0" step="1">
+  </label>
   {% if dengan_stok %}
-  <p><label>Stok Awal:<br><input name="stok" value="{{ barang.get('stok', 0) }}" required></label></p>
+  <label>Stok awal
+    <input type="number" name="stok" value="{{ barang.get('stok', 0) }}" required min="0" step="1">
+  </label>
   {% endif %}
-  <p><label>Stok Minimum:<br><input name="stok_minimum" value="{{ barang.get('stok_minimum', 0) }}" required></label></p>
+  <label>Stok minimum
+    <input type="number" name="stok_minimum" value="{{ barang.get('stok_minimum', 0) }}" required min="0" step="1">
+  </label>
   <button type="submit">Simpan</button>
   <a href="{{ url_for('daftar_barang') }}">Batal</a>
 </form>
