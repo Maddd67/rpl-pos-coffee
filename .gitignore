@@ -218,3 +218,17 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Rahasia, basis data, dan cadangan
+.env
+*.db
+toko.db
+educoffee.db
+cadangan/
+
+# Berkas sementara & lingkungan lokal
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
