@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block judul %}Katalog Menu &amp; Stok — Edu Coffee{% endblock %}
+{% block isi %}
+<h1>Katalog Menu &amp; Stok — Edu Coffee</h1>
+<p><a href="{{ url_for('tambah_barang') }}">+ Tambah Menu / Bahan</a></p>
+<table>
+  <tr>
+    <th>Nama</th>
+    <th>Harga Jual</th>
+    <th>Stok</th>
+    <th>Status</th>
+    <th>Aksi</th>
+  </tr>
+  {% for b in barang %}
+  <tr>
+    <td>{{ b['nama'] }}</td>
+    <td>Rp {{ "{:,}".format(b['harga_jual']).replace(',', '.') }}</td>
+    <td>{{ b['stok'] }}</td>
+    <td>
+      {% if b['stok'] < b['stok_minimum'] %}
+        <strong style="color: red;">Stok menipis</strong>
+      {% else %}
+        Cukup
+      {% endif %}
+    </td>
+    <td>
+      <a href="{{ url_for('ubah_barang', barang_id=b['id']) }}">Ubah</a> |
+      <form method="post" action="{{ url_for('hapus_barang', barang_id=b['id']) }}" style="display:inline"
+            onsubmit="return confirm('Yakin ingin menghapus data ini dari Edu Coffee?')">
+        <button type="submit">Hapus</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="5">Belum ada data menu atau bahan baku.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

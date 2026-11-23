@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block judul %}{{ judul }} — Edu Coffee{% endblock %}
+{% block isi %}
+<h1>{{ judul }}</h1>
+{% for g in galat %}<p class="galat">{{ g }}</p>{% endfor %}
+<form method="post">
+  <p><label>Nama Menu / Bahan:<br><input name="nama" value="{{ barang.get('nama', '') }}" required></label></p>
+  <p><label>Harga Jual (Rp):<br><input name="harga_jual" value="{{ barang.get('harga_jual', '') }}" required></label></p>
+  {% if dengan_stok %}
+  <p><label>Stok Awal:<br><input name="stok" value="{{ barang.get('stok', 0) }}" required></label></p>
+  {% endif %}
+  <p><label>Stok Minimum:<br><input name="stok_minimum" value="{{ barang.get('stok_minimum', 0) }}" required></label></p>
+  <button type="submit">Simpan</button>
+  <a href="{{ url_for('daftar_barang') }}">Batal</a>
+</form>
+{% endblock %}
